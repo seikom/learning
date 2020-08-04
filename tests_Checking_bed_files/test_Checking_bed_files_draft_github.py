@@ -19,7 +19,8 @@ parser.parse_args([])
 # testing if .fixture helps to remove pytest error
 @pytest.fixture
 def test_path():
-    path_upcoming_test = '/Users/seikomakino/Documents/201809_NHS_STP/SCH_SDGS/SDGS_Bioinfo/Projects/Checking_bed_files_202005_/'
+    #path_upcoming_test = '/Users/seikomakino/Documents/201809_NHS_STP/SCH_SDGS/SDGS_Bioinfo/Projects/Checking_bed_files_202005_/'
+    path_upcoming_test='test_data/'
     return path_upcoming_test
 
 @pytest.fixture
@@ -41,7 +42,7 @@ def test_n_service():
 @pytest.mark.check_format
 def test_check_format():
     # set up - path and file
-    path_upcoming_test = '/Users/seikomakino/Documents/201809_NHS_STP/SCH_SDGS/SDGS_Bioinfo/Projects/Checking_bed_files_202005_/'
+    path_upcoming_test = 'test_data/'
     f_new_bed = 'Haems_mini_SLC40A1_v2.bed'
     n_service = 'NGD'
     #f_not_ascii='test_bed.xlsx'
@@ -53,7 +54,7 @@ def test_check_format():
 @pytest.mark.check_header
 def test_check_header():
     # set up
-    path_upcoming_test = '/Users/seikomakino/Documents/201809_NHS_STP/SCH_SDGS/SDGS_Bioinfo/Projects/Checking_bed_files_202005_/'
+    path_upcoming_test = 'test_data/'
     f_new_bed = 'Haems_mini_SLC40A1_v2.bed'
     n_service = 'NGD'
     f_not_ascii='test_bed.xlsx'

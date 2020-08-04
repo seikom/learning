@@ -30,6 +30,7 @@ import pandas as pd # my OS X pandas version is 1.0.4
 /netapp1/sdgs/misc_analysis/ion_trends/all_possible_broads.csv
 '''
 ### paths
+'''
 path_upcoming='/results/Analysis/MiSeq/MasterBED/upcoming_BED_files/'
 path_pl_output='/home/bioinfo/bed_files_created/'
 path_masterbed='/results/Analysis/MiSeq/MasterBED/'
@@ -42,6 +43,8 @@ path_rsync_pinky = '@10.182.155.26:/sdgs/reference/bed/'
 path_rsync_brain='@10.182.155.27:/sdgs/reference/bed/'
 
 path_upcoming_test='/Users/seikomakino/Documents/201809_NHS_STP/SCH_SDGS/SDGS_Bioinfo/Projects/Checking_bed_files_202005_/'
+'''
+path_upcoming_test='test_data/'
 
 ### arguments:
 parser = argparse.ArgumentParser(description='Checking a new bed file for services') # parser is a container to hold arguments
@@ -62,16 +65,8 @@ f_old_bed=args.old_bed # some are brand new bed files # Todo: make sure no old_b
 
 f_bed_modifications= str(n_service) + '_BED_file_modifications.txt'
 
-'''
-/results/Analysis/MiSeq/MasterBED/upcoming_BED_files/<bed_file_name>
-/home/bioinfo/bed_files_created/<service>_BED_file_modifications.txt # <service> is variable
-/results/Analysis/MiSeq/MasterBED/<old_bed_file_name>
-/results/Analysis/MiSeq/MasterBED/exonic_files/<old_exonic_file_name>
-'''
 
 ### steps
-# todo: check if bioinfo, pinky and brain are not immutable, or include it in the SOP?
-
 
 ### 1.Check that each panel has an exonic BED file and both are in the upcoming folder.
 # 1.1 exonic file name check
@@ -93,7 +88,7 @@ else:
 # Check the file format
 def check_format(path,file):
     f_format=magic.from_file(path+file)
-    if 'ASCII text' in f_format: # todo: check 'ASCII text' covers all text file format
+    if 'ASCII text' in f_format: #
         print(file+' is a ASCII text format. Proceeding.')
     else:
         print(file+' is not a text format. Check the file.')
@@ -127,7 +122,7 @@ check_header(path_upcoming_test,f_new_bed_ex,header)
 
 ### 3.Check that the regions in the exonic bed file differ by 20 bases to the regions in the main bed file.
 # If this is not the case, check this with the bed file author.
-# todo
+#
 #
 # 3.1 read in the whole files using pandas.read_table()
 #with open(path_upcoming_test+f_new_bed) as f:
