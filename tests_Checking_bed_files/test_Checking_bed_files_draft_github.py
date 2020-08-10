@@ -8,7 +8,7 @@ import argparse
 sys.path.append('/Users/seikomakino/PycharmProjects/SDGS/learning/')
 
 
-from Checking_bed_files_draft import check_format, check_header
+from Checking_bed_files_draft_github import check_format, check_header
 
 # parser.parse_args([])
 
