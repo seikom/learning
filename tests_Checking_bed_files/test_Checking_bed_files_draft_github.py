@@ -38,19 +38,18 @@ def test_n_service():
     return n_service
 '''
 
-@pytest.mark.check_format
+
 def test_check_format():
     # set up - path and file
     path_upcoming_test = '/Users/seikomakino/Documents/201809_NHS_STP/SCH_SDGS/SDGS_Bioinfo/Projects/Checking_bed_files_202005_/'
     f_new_bed = 'Haems_mini_SLC40A1_v2.bed'
     n_service = 'NGD'
-    #f_not_ascii='test_bed.xlsx'
+    f_not_ascii='test_bed.xlsx'
     # act and assert
-    #assert check_format(path_upcoming_test,f_new_bed)
-    assert True
-    #assert check_format(path_upcoming_test,f_not_ascii)
+    assert check_format(path_upcoming_test,f_new_bed)
+    assert check_format(path_upcoming_test,f_not_ascii)
 
-@pytest.mark.check_header
+
 def test_check_header():
     # set up
     path_upcoming_test = '/Users/seikomakino/Documents/201809_NHS_STP/SCH_SDGS/SDGS_Bioinfo/Projects/Checking_bed_files_202005_/'
@@ -58,8 +57,7 @@ def test_check_header():
     n_service = 'NGD'
     f_not_ascii='test_bed.xlsx'
     # act and assert
-    assert True
-    #assert check_header(path_upcoming_test,f_new_bed)
+    assert check_header(path_upcoming_test,f_new_bed)
 
 
 if __name__=='__main__':
