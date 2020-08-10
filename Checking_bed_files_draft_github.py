@@ -51,6 +51,58 @@ parser.add_argument('-ob','--old_bed',type=str,metavar='',help='Old bed file to 
 # positional arguments have no '-' or '--'
 # metavar - A name for the argument in usage messages. If '' empty then it doesn't show anything in '-h'
 
+# Check the file format
+def check_format(path,file):
+    f_format=magic.from_file(path+file)
+    if 'ASCII text' in f_format: # todo: check 'ASCII text' covers all text file format
+        print(file+' is a ASCII text format. Proceeding.')
+    else:
+        print(file+' is not a text format. Check the file.')
+        print('Exiting. ')
+        #exit()
+
+def check_header(path,file,header):
+    with open(path+file,'r') as bed:
+        line=bed.readlines(1) # as a list
+    if header in line[0]:
+        print('The bed file has a header. Proceeding.')
+    else:
+        print('The bed file has no header. Check the file.')
+        print('Exiting. ')
+        #exit()
+
+def run_perl_script(file, file_bed_mod):
+    # 4.1 run the perl script
+    p_pl=subprocess.Popen(['/results/Pipeline/SDGSPipeline/scripts/sorting_bed_file_and_combining_overlapping_regions.pl', path_upcoming + file, path_pl_output + file, path_pl_output + f_bed_modifications], stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+    # 4.2 check the output
+    pl_stdout=p_pl.stdout.read() # getting the stdout in bytes
+    pl_stdout_str=pl_stdout.decode('utf-8') # the line ending is \n
+    #b'8 regions were read in\nThere were 0 regions that were listed with different names\nThere were 0 regions that were duplicated\nThere were 0 regions that were contained within another\nThere were 0 regions that were concatenated with another\n'
+    pl_stderr=p_pl.stderr.read()
+    pl_stderr_str=pl_stderr.decode('utf-8')
+    
+    if pl_stderr==b'':
+        print('The stdout of \'sorting_bed_file_and_combining_overlapping_regions.pl\': ')
+        for i in pl_stdout_str.split('\n'):
+            print(i)
+    else:
+        print('The perl script gave an error. ')
+        pl_stderr_str=pl_stderr.decode('utf-8')
+        print('The stderr of \'sorting_bed_file_and_combining_overlapping_regions.pl\': ')
+        for i in pl_stderr_str.split('\n'):
+            print(i)
+        print('Check the error and the bed file: '+file+' ')
+        print('Exiting. ')
+        #exit()
+
+def cmd_bed(cmd,file,path_org,path_dest):
+    try:
+        subprocess.run(cmd +' ' + path_org + file + ' ' + path_dest + file, shell=True, check=True)
+    except subprocess.CalledProcessError as e:
+        print(e.output)
+        print(cmd+' error for ' + file + ' to '+path_dest+' happened. Something wrong. ')
+        print('Exiting. ')
+        # exit()
 args = parser.parse_args()
 # dummy args for pytest - dnw
 #args = parser.parse_args(['Haems_mini_SLC40A1_v2.bed','NGD','Haems_mini_SLC40A1_v1.bed'])
@@ -90,17 +142,6 @@ else:
     print('Exiting.')
     #exit()
 
-# Check the file format
-def check_format(path,file):
-    f_format=magic.from_file(path+file)
-    if 'ASCII text' in f_format: # todo: check 'ASCII text' covers all text file format
-        print(file+' is a ASCII text format. Proceeding.')
-    else:
-        print(file+' is not a text format. Check the file.')
-        print('Exiting. ')
-        #exit()
-
-
 check_format(path_upcoming_test,f_new_bed)
 check_format(path_upcoming_test,f_new_bed_ex)
 
@@ -109,17 +150,6 @@ check_format(path_upcoming_test,f_new_bed_ex)
 # test file: /Users/seikomakino/Documents/201809_NHS_STP/SCH_SDGS/SDGS_Bioinfo/Projects/Checking_bed_files_202005_/Haems_mini_SLC40A1_v2.bed
 #with open(path_upcoming_test + f_new_bed, 'r') as new_bed:
 header='#chr\tstart\tend\tregion'
-
-def check_header(path,file,header):
-    with open(path+file,'r') as bed:
-        line=bed.readlines(1) # as a list
-    if header in line[0]:
-        print('The bed file has a header. Proceeding.')
-    else:
-        print('The bed file has no header. Check the file.')
-        print('Exiting. ')
-        #exit()
-
 
 check_header(path_upcoming_test,f_new_bed,header)
 check_header(path_upcoming_test,f_new_bed_ex,header)
@@ -187,31 +217,6 @@ for i_main in tbl_main.index:
 # todo: rewrite with run()
 
 p_pl_test=subprocess.Popen(['/Users/seikomakino/PycharmProjects/SDGS/SDGSPipeline/scripts/sorting_bed_file_and_combining_overlapping_regions.pl',path_upcoming_test+f_new_bed,path_upcoming_test+'local_destination_folder'+f_new_bed,path_upcoming_test+'local_destination_folder'+f_bed_modifications],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
-
-def run_perl_script(file, file_bed_mod):
-    # 4.1 run the perl script
-    p_pl=subprocess.Popen(['/results/Pipeline/SDGSPipeline/scripts/sorting_bed_file_and_combining_overlapping_regions.pl', path_upcoming + file, path_pl_output + file, path_pl_output + f_bed_modifications], stdout=subprocess.PIPE,stderr=subprocess.PIPE)
-    # 4.2 check the output
-    pl_stdout=p_pl.stdout.read() # getting the stdout in bytes
-    pl_stdout_str=pl_stdout.decode('utf-8') # the line ending is \n
-    #b'8 regions were read in\nThere were 0 regions that were listed with different names\nThere were 0 regions that were duplicated\nThere were 0 regions that were contained within another\nThere were 0 regions that were concatenated with another\n'
-    pl_stderr=p_pl.stderr.read()
-    pl_stderr_str=pl_stderr.decode('utf-8')
-    
-    if pl_stderr==b'':
-        print('The stdout of \'sorting_bed_file_and_combining_overlapping_regions.pl\': ')
-        for i in pl_stdout_str.split('\n'):
-            print(i)
-    else:
-        print('The perl script gave an error. ')
-        pl_stderr_str=pl_stderr.decode('utf-8')
-        print('The stderr of \'sorting_bed_file_and_combining_overlapping_regions.pl\': ')
-        for i in pl_stderr_str.split('\n'):
-            print(i)
-        print('Check the error and the bed file: '+file+' ')
-        print('Exiting. ')
-        #exit()
-
 
 run_perl_script(f_new_bed,f_bed_modifications)
 run_perl_script(f_new_bed_ex,f_bed_modifications)
@@ -284,15 +289,6 @@ except subprocess.CalledProcessError as e:
     print('Exiting. ')
     #exit()
 '''
-
-def cmd_bed(cmd,file,path_org,path_dest):
-    try:
-        subprocess.run(cmd +' ' + path_org + file + ' ' + path_dest + file, shell=True, check=True)
-    except subprocess.CalledProcessError as e:
-        print(e.output)
-        print(cmd+' error for ' + file + ' to '+path_dest+' happened. Something wrong. ')
-        print('Exiting. ')
-        # exit()
 
 cmd_bed('cp',f_new_bed,path_pl_output,path_masterbed)
 cmd_bed('cp',f_new_bed_ex,path_pl_output,path_masterbed_ex)
