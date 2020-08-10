@@ -59,6 +59,3 @@ def test_check_header():
     # act and assert
     assert check_header(path_upcoming_test,f_new_bed)
 
-
-if __name__=='__main__':
-    pytest.main()
