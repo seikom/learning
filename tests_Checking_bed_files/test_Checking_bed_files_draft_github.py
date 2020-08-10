@@ -10,7 +10,7 @@ sys.path.append('/Users/seikomakino/PycharmProjects/SDGS/learning/')
 
 from Checking_bed_files_draft import check_format, check_header
 
-parser.parse_args([])
+# parser.parse_args([])
 
 ## troubleshooting on args
 # https://stackoverflow.com/questions/55259371/pytest-testing-parser-error-unrecognised-arguments
